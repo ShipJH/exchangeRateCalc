@@ -33,13 +33,14 @@
 	function goSubmit(){
 		var rate = $('#rate').val();
 		var sendMoney = $('#sendMoney').val() * 1; 
+		var selectCountry = $('#selectCountry').val();
 		
 		var url = "exchangeRateSubmit?rate=" + rate + "&sendMoney=" + sendMoney;  
 		
 		//jquery ajax형태.
 		$.get(url, function(data){
 			
-			alert(data);
+			$('#resultDiv').html("수취금액은 " + data + " " +selectCountry + "입니다.")
 			
 		}).fail(function(data) {
 		    alert( "error : " + data.responseText );
@@ -79,6 +80,7 @@
 	<br/>
 	<button onclick="goSubmit();"> Submit </button>
 	
+	<div id="resultDiv"></div>
 	
 	
 	

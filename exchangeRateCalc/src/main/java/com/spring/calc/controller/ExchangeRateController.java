@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.spring.calc.service.ExchangeRateService;
@@ -59,8 +60,7 @@ public class ExchangeRateController {
      * @return
      */
     @RequestMapping("/exchangeRateSubmit")
-//    public ResponseEntity<String> exchangeRateSubmit(FromVo vo){
-   	public ResponseEntity<String> exchangeRateSubmit(@Validated FromVo vo, BindingResult br){
+   	public ResponseEntity<String> exchangeRateSubmit(@ModelAttribute @Validated FromVo vo, BindingResult br){
     	
     	if(br.hasErrors()) {
     		
@@ -76,7 +76,13 @@ public class ExchangeRateController {
     		return new ResponseEntity<String>(errorMsg, HttpStatus.BAD_REQUEST);
     	}
     	
-    	String result = exchangeRateService.getRateMultiply(Double.parseDouble(vo.getRate().replaceAll(",", "")), vo.getSendMoney());
+    	String result = "";
+    	try {
+    		 result = exchangeRateService.getRateMultiply(Double.parseDouble(vo.getRate().replaceAll(",", "")), vo.getSendMoney());	
+    	}catch (Exception e) {
+			e.printStackTrace();
+			return new  ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
     	
         return new ResponseEntity<String>(result, HttpStatus.OK);
     }
