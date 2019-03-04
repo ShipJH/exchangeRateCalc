@@ -1,0 +1,11 @@
+spring:
+  thymeleaf:
+    cache: false
+  http:
+    encoding:
+      charset: UTF-8
+server:
+  port: 8081
+
+  
+apikey: 4ddf63121ed2cf40f0357b53f1c3c906

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head>
+<title>환율계산</title>
+
+<!-- CDN 형태로 제이쿼리사용 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+
+<script type="text/javascript">
+	//     // 수취금액 조회하기
+	//     function submitForm(){
+	//         var remittanceAmountTag = $('#remittanceAmount');
+	//         var errMessageTag = $('#err-message');
+	//         var currency = $('#selectCountry').val();
+	//         var remittanceAmount = remittanceAmountTag.val();
+
+	//         $.ajax({
+	//             url: "/api/exchangeRates/receivedAmount?currency=" + currency + "&remittanceAmount=" + remittanceAmount,
+	//             type:"GET",
+	//             success : function (data) {
+	//                 remittanceAmountTag.prop("class", "form-control");
+	//                 $('#receivedAmount').html("<p>수취금액은 <strong>" + data + " "  + currency + "/USD</strong> 입니다.</p>");
+	//             },
+	//             error : function (response) {
+	//                 var errorMsg = response.responseJSON[0];
+
+	//                 if (!errorMsg) {
+	//                     var errMsg = response.responseJSON.message.toString();
+
+	//                     if (errMsg.indexOf("InvalidFormatException") !== -1) {
+	//                         remittanceAmountTag.prop("class", "form-control is-invalid");
+	//                         errMessageTag.text("송금액이 바르지 않습니다");
+	//                     } else {
+	//                         alert("통신 오류! \n관리자에게 문의하세요.")
+	//                     }
+	//                     return ;
+	//                 }
+
+	//                 remittanceAmountTag.prop("class", "form-control is-invalid");
+	//                 errMessageTag.text(errorMsg['defaultMessage']);
+	//             }
+	//         });
+	//     }
+
+	// 수취 국가 변경시 환율 가져오기
+	//     $('#selectCountry').onChange(function () {
+	//         var currency = $(this).val();
+
+	//         alert("zzz : " + currency);
+
+	//         return;
+
+	//         $.ajax({
+	//             url: "/api/exchangeRates?currency=" + currency,
+	//             type:"GET",
+	//             success : function (data) {
+	//                 $('#exchangeRate').text(data + " " + currency + "/USD");
+	//             },
+	//             error : function (request) {
+	//                 alert("통신 오류! \n관리자에게 문의하세요.");
+	//             }
+	//         });
+	//     });
+
+	function changeCountry(sel) {
+		var currency = sel.value;
+		
+		       
+	$.ajax({
+			url : "/exchangeRates?currency=" + currency,
+			type : "GET",
+			success : function(data) {
+				$('#exchangeRate').text(data + " " + currency + "/USD");
+			},
+			error : function(request) {
+				alert("통신 오류! \n관리자에게 문의하세요.");
+			}
+		});
+
+		alert("zzz : " + currency);
+
+	}
+</script>
+
+
+<body>
+	<select id="selectCountry" onchange="changeCountry(this);">
+		<option selected value="KRW">한국(KRW)</option>
+		<option value="JPY">일본(JPY)</option>
+		<option value="PHP">필리핀(PHP)</option>
+	</select>
+	
+	<div id="exchangeRate">
+	
+	</div>
+	
+</body>
+</html>
