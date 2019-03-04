@@ -1,0 +1,39 @@
+@charset "UTF-8";
+
+
+button  {
+	width: 100px;
+	background-color: #6699ff;
+	border: none;
+	color: #fff;
+	padding: 15px 0;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 15px;
+	margin: 4px;
+	cursor: pointer;
+	border-radius:10px;
+}
+
+
+button:hover {
+    background-color: #f8585b;
+}
+
+
+select {
+	width: 150px; /* 원하는 너비설정 */
+	background:
+		url(https://farm1.staticflickr.com/379/19928272501_4ef877c265_t.jpg)
+		no-repeat 95% 50%; /* 네이티브 화살표 대체 */
+	border: 1px solid #999;
+	border-radius: 0px; /* iOS 둥근모서리 제거 */
+	-webkit-appearance: none; /* 네이티브 외형 감추기 */
+	-moz-appearance: none;
+	appearance: none;
+}
+
+.bold{
+	font-weight: bold;
+}

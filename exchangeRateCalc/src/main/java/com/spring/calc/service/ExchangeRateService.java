@@ -14,42 +14,64 @@ public class ExchangeRateService {
 
 	private final RestTemplate restTemplate;
 	
-    // restTemplate 초기화
     public ExchangeRateService(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
     
+    //application.yml 에 저장된 프로퍼티성 api키를 가져와 accessKey에 할당한다.
     @Value("${apikey}")
     private String accessKey;
 
+    //USD로 고정.
     private final String source = "USD";
     
     
     
     
 
-    
+    /**
+     * 선택한 국가의 환율을 가져온다.
+     * @param currency [선택한 국가의 파라미터]
+     * @return API를 통해 반환된 값을 소수점포맷하여 반환되는 값
+     */
 	public String getExchangeRateVal(String currency) {
 		double val = getExchangeRate(currency);
-		
+		return formatter(val); 
+	}
+
+	/**
+	 * 실시간 API를 통하여 환율을 가져오는 메소드.
+	 * @param currency [선택한 국가의 파라미터]
+	 * @return API를 통한 현재 실시간 환율의 반환값
+	 */
+	private double getExchangeRate(String currency) {       
+	    
+		String apiUrl = "http://www.apilayer.net/api/live?access_key=" + accessKey + "&currencies=" + currency + "&source=" + source;
+		ApiVo apiVo = restTemplate.getForObject(apiUrl, ApiVo.class);
+
+	    return apiVo.getQuotes().get(source+currency);
+    }
+
+	
+	/**
+	 * 환율과 송금액을 계산해준다.
+	 * @param rate [환율]
+	 * @param sendMoney [송금액]
+	 * @return 환율x송금액
+	 */
+	public String getRateMultiply(double rate, Double sendMoney) {
+		return formatter(rate * sendMoney);
+	}
+	
+	
+	/**
+	 * 소수점을 format해주는 메소드.
+	 * @param val [소수점 포맷을 요구하는 파라미터]
+	 * @return 포맷된 값
+	 */
+	public String formatter(double val) {
 		DecimalFormat df = new DecimalFormat("###,###.00");
 		return df.format(val);
 	}
-
-	private double getExchangeRate(String currency) {       
-	    ApiVo apiVo = restTemplate.getForObject("http://www.apilayer.net/api/live?access_key=" + accessKey + "&currencies=" + currency + "&source=" + source, ApiVo.class);
-        // TODO : restTemplate 은 절대 null 을 반환하지 않는다. 따라서 Optional 을 사용할 필요가 없다.
-        // TODO : optional 을 사용하면 가독성이 떨어지기 때문에 상황에 맞게 써야 한다.
-
-	    System.out.println(apiVo.getQuotes().get(source+currency));
-	    
-	    return apiVo.getQuotes().get(source+currency);
-	    
-	    //        return Optional.ofNullable(apiData)
-//                .map(ApiData::getQuotes)                    // 국가별 환율 정보 맵을 가져옴
-//                .map(map -> map.get(source + currency))     // 맵으로 부터 해당 국가의 환율 가져옴
-//                .orElseThrow(RuntimeException::new);        // Todo : 어떠한 오류를 나타내는지 정확히 알고 처리하는게 좋다.
-//                // 이 부분도
-    }
 	
 }
